@@ -38,11 +38,19 @@ test('generates complete MDX for the complex contract and all four RPC shapes', 
   assert.match(unary, /"weightMg": "450000"/);
   assert.match(unary, /\/docs\/reference\/api\/types\/shipping-v1-getshipmentrequest\//);
   assert.match(unary, /No side effects/);
+  const contract = unary.split('## RPC contract')[1]!.split('## Connect endpoint')[0]!;
+  assert.equal((contract.match(/GetShipmentRequest<\/a>/g) ?? []).length, 1);
+  assert.equal((contract.match(/GetShipmentResponse<\/a>/g) ?? []).length, 1);
+  assert.match(contract, /title="shipping.v1.GetShipmentRequest"/);
+  assert.ok(!contract.includes('Request:'));
   for (const [name, shape] of [['watchshipment', 'Server streaming'], ['uploadevents', 'Client streaming'], ['syncevents', 'Bidirectional streaming']]) {
     const page = await readFile(join(out, `services/shipping-v1-shipmentservice/${name}.mdx`), 'utf8');
     assert.ok(page.includes(shape!));
     assert.ok(page.includes('application/connect+json'));
     assert.ok(!page.includes('curl --fail-with-body'));
+    const signature = page.split('## RPC contract')[1]!.split('## Connect endpoint')[0]!;
+    assert.equal(signature.split('<strong>returns</strong>')[0]!.includes('(<strong>stream</strong> <a'), name !== 'watchshipment');
+    assert.equal(signature.includes('<strong>returns</strong> (<strong>stream</strong> <a'), name !== 'uploadevents');
   }
 });
 
