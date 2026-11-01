@@ -1,0 +1,35 @@
+name: Check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.27.3'
+          cache-dependency-path: examples/go/go.sum
+      - run: npm ci
+      - run: npm run fixture
+      - run: npm run check
+      - name: Verify generated files are current
+        run: git diff --exit-code -- examples/gen examples/schema.binpb examples/site/src/content/docs/reference
+      - name: Exercise generated Go examples
+        run: npm run test:go
+      - name: Verify the packed consumer package
+        run: npm run test:package
+      - name: Check the GitHub Pages base path
+        run: npm run docs:build && node scripts/check-links.mjs
+        env:
+          GITHUB_PAGES: 'true'

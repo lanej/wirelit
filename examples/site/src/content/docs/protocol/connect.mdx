@@ -1,0 +1,44 @@
+---
+title: Calling a Connect API
+description: The protocol behavior shared by the example API methods.
+---
+
+Connect uses named services and methods defined in Protobuf. Each method has an input and an output message. JSON and binary Protobuf are two encodings of those messages.
+
+## Unary calls
+
+A unary call sends one message and receives one message. For JSON, send an HTTP POST to `/package.Service/Method` with `Content-Type: application/json`. The generated [GetShipment reference](/reference/api/services/shipping-v1-shipmentservice/getshipment/) provides the complete URL and request.
+
+Binary Connect uses `application/proto`. Both representations share the same method contract. Protobuf JSON mapping has specific rules: 64-bit integers serialize as strings, bytes as base64, timestamps as RFC 3339 strings, and enums normally as their names.
+
+## Streaming calls
+
+Connect supports server streaming, client streaming, and bidirectional streaming. The generated reference labels every method's shape. A browser client or network proxy may support fewer shapes than the protocol itself.
+
+Streaming content types are `application/connect+json` and `application/connect+proto`. Each message has a binary envelope, including JSON messages. The final envelope carries stream completion, optional error information, and metadata. Example JSON objects in the reference represent decoded payloads rather than a complete stream encoding.
+
+The [WatchShipment examples](/reference/api/services/shipping-v1-shipmentservice/watchshipment/) use SDKs to process that stream.
+
+## Errors
+
+Unary Connect errors carry a JSON error object with a Connect code and message, with an HTTP status determined by the error code. This fixture returns `invalid_argument` with HTTP 400 for an empty shipment identifier.
+
+Streaming errors may arrive after the response has started. An HTTP 200 response alone does not prove that a stream completed successfully. Clients must check the stream's final result.
+
+## Metadata and authentication
+
+Use request headers for application metadata and authentication. The fixture server requires no credentials. Actual authorization rules belong to the application's documentation; they cannot be inferred from message fields.
+
+## Deadlines and cancellation
+
+Connect clients expose request deadlines and cancellation through their language's APIs. Choose a timeout appropriate to the operation. Cancel a subscription when the application stops consuming it, and check the final error before deciding whether to retry.
+
+## Idempotency and retries
+
+The schema marks GetShipment as having no side effects. The generated reference displays that annotation. GET support still depends on server configuration. No general retry guarantee is inferred for unannotated methods.
+
+## Other protocols
+
+Connect implementations can also support gRPC and gRPC-Web. Document only the protocols enabled by the actual server deployment. This example server exposes Connect over HTTP/1.1; Wirelit's optional gRPC examples should be enabled only for a deployment that supports them.
+
+For the complete wire specification, see the [Connect protocol reference](https://connectrpc.com/docs/protocol/) and [ProtoJSON format](https://protobuf.dev/programming-guides/json/).

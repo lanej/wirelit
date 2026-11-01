@@ -1,0 +1,35 @@
+---
+title: Explore the complex schema
+description: The schema Wirelit uses to exercise its own API documentation generator.
+sidebar:
+  order: 2
+---
+
+Wirelit uses a shipping domain to exercise the parts of Protobuf that a small hello-world example misses. Its own documentation build compiles these source files, runs Wirelit, and builds the generated MDX beside the guides you are reading.
+
+The [main sample](https://github.com/lanej/wirelit/blob/main/examples/proto/shipping/v1/shipping.proto) imports shared types from [common.proto](https://github.com/lanej/wirelit/blob/main/examples/proto/shipping/v1/common.proto) and several Protobuf well-known types.
+
+## What to inspect
+
+| Schema feature | Generated reference |
+| --- | --- |
+| HTTP and JSON plus typed RPC calls | [GetShipment](/reference/api/services/shipping-v1-shipmentservice/getshipment/) |
+| Server streaming | [WatchShipment](/reference/api/services/shipping-v1-shipmentservice/watchshipment/) |
+| Client streaming | [UploadEvents](/reference/api/services/shipping-v1-shipmentservice/uploadevents/) |
+| Bidirectional streaming | [SyncEvents](/reference/api/services/shipping-v1-shipmentservice/syncevents/) |
+| Custom JSON field name | [Shipment.id](/reference/api/types/shipping-v1-shipment/#id) |
+| Explicit presence | [GetShipmentRequest.include_events](/reference/api/types/shipping-v1-getshipmentrequest/#include_events) |
+| Oneof destination | [Shipment.street_address](/reference/api/types/shipping-v1-shipment/#street_address) |
+| Nested message | [Shipment.Insurance](/reference/api/types/shipping-v1-shipment-insurance/) |
+| Nested enum | [Insurance.Coverage](/reference/api/types/shipping-v1-shipment-insurance-coverage/) |
+| Imported message | [PostalAddress](/reference/api/types/shipping-v1-postaladdress/) |
+| Map of messages | [Shipment.carrier_quotes](/reference/api/types/shipping-v1-shipment/#carrier_quotes) |
+| Recursive reference | [Shipment.related](/reference/api/types/shipping-v1-shipment/#related) |
+| Timestamp, duration, Any, Struct, and FieldMask | [Shipment](/reference/api/types/shipping-v1-shipment/) and [GetShipmentRequest](/reference/api/types/shipping-v1-getshipmentrequest/) |
+| Deprecation | [Shipment.legacy_status](/reference/api/types/shipping-v1-shipment/#legacy_status) |
+
+## Keep the example honest
+
+The fixture tests parse curated examples with their actual Protobuf schemas and execute the supported generated calls against a Connect server. Client and bidirectional streaming pages currently expose accurate contracts and protocol guidance; runnable snippets for those shapes are future work.
+
+The build also checks links across authored and generated documentation. The GitHub Pages workflow generates its API reference using the same CLI that consumers install.

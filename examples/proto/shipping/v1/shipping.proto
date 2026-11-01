@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package shipping.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "shipping/v1/common.proto";
+
+option go_package = "github.com/lanej/wirelit/examples/go/gen/shipping/v1;shippingv1";
+
+// Manage shipments and observe their progress.
+//
+// Start with the [shipment workflow](/guides/track-a-shipment/).
+service ShipmentService {
+  // Retrieve a shipment and its most recent carrier event.
+  //
+  // See [Track a shipment](/guides/track-a-shipment/) for the complete workflow.
+  rpc GetShipment(GetShipmentRequest) returns (GetShipmentResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  // Watch carrier events as they arrive. The stream ends when the shipment is delivered.
+  rpc WatchShipment(WatchShipmentRequest) returns (stream ShipmentEvent);
+  // Upload a stream of carrier events. The response contains the number accepted.
+  rpc UploadEvents(stream ShipmentEvent) returns (UploadEventsResponse);
+  // Exchange carrier events in both directions.
+  rpc SyncEvents(stream ShipmentEvent) returns (stream ShipmentEvent);
+}
+
+// Look up one shipment using its application identifier.
+message GetShipmentRequest {
+  // The shipment identifier. Example: `shp_123`.
+  string shipment_id = 1;
+  // Include the event history when explicitly set to true.
+  optional bool include_events = 2;
+  // Optional projection of response fields. ProtoJSON uses comma-separated camelCase paths.
+  google.protobuf.FieldMask read_mask = 3;
+}
+
+// A shipment and its current status.
+message GetShipmentResponse {
+  // The shipment matching the request.
+  Shipment shipment = 1;
+}
+
+// Subscribe to a shipment's carrier events.
+message WatchShipmentRequest {
+  // The shipment to observe.
+  string shipment_id = 1;
+}
+
+// A parcel moving through a carrier network.
+message Shipment {
+  // Application identifier. This field deliberately uses a custom JSON name.
+  string id = 1 [json_name = "shipmentId"];
+  // Current carrier lifecycle status.
+  ShipmentStatus status = 2;
+  // Parcel mass, in milligrams. ProtoJSON encodes this 64-bit value as a string.
+  uint64 weight_mg = 3;
+  // When the shipment was created.
+  google.protobuf.Timestamp created_at = 4;
+  // User-provided metadata. Values can contain text such as `{priority}` or `<fragile>`.
+  map<string, string> metadata = 5;
+  // Carrier event history.
+  repeated ShipmentEvent events = 6;
+  // Optional binary proof of delivery. Encoded as base64 in JSON.
+  bytes proof_of_delivery = 7;
+  // Choose exactly one destination representation when providing a destination.
+  oneof destination {
+    // Street address for doorstep delivery.
+    string street_address = 8;
+    // Carrier pickup point identifier.
+    string pickup_point = 9;
+  }
+  // Carrier's estimated travel time.
+  google.protobuf.Duration estimated_transit = 10;
+  // An optional related shipment. This is a recursive reference.
+  Shipment related = 11;
+  // Historical display text. Use status instead.
+  string legacy_status = 12 [deprecated = true];
+  // Destination information defined in an imported file.
+  PostalAddress delivery_address = 13;
+  // Quotes indexed by carrier; a map whose values are imported message types.
+  map<string, CurrencyAmount> carrier_quotes = 14;
+  // A nested message with its own nested enum.
+  Insurance insurance = 15;
+  // Carrier-specific typed details. JSON uses an @type URL.
+  google.protobuf.Any carrier_details = 16;
+  // Arbitrary JSON-compatible application properties.
+  google.protobuf.Struct properties = 17;
+
+  // Insurance offered for this shipment.
+  message Insurance {
+    // Coverage classification.
+    enum Coverage {
+      // No coverage decision has been made.
+      COVERAGE_UNSPECIFIED = 0;
+      // Standard parcel coverage.
+      COVERAGE_STANDARD = 1;
+      // Extended parcel coverage.
+      COVERAGE_EXTENDED = 2;
+    }
+    // Selected coverage.
+    Coverage coverage = 1;
+    // Maximum covered amount, in currency minor units.
+    CurrencyAmount amount = 2;
+  }
+}
+
+// Carrier lifecycle state.
+enum ShipmentStatus {
+  // The carrier has not reported a known status.
+  SHIPMENT_STATUS_UNSPECIFIED = 0;
+  // The carrier has possession of the parcel.
+  SHIPMENT_STATUS_IN_TRANSIT = 1;
+  // The parcel was delivered.
+  SHIPMENT_STATUS_DELIVERED = 2;
+}
+
+// One event on a shipment's tracking timeline.
+message ShipmentEvent {
+  // Shipment identifier.
+  string shipment_id = 1;
+  // A monotonic event sequence number, represented as a JSON string.
+  int64 sequence = 2;
+  // Carrier lifecycle state at this event.
+  ShipmentStatus status = 3;
+  // Carrier event timestamp.
+  google.protobuf.Timestamp occurred_at = 4;
+}
+
+// Result of an uploaded event stream.
+message UploadEventsResponse {
+  // Number of accepted events.
+  uint32 accepted = 1;
+}

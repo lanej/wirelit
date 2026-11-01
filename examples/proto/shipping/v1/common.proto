@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package shipping.v1;
+
+option go_package = "github.com/lanej/wirelit/examples/go/gen/shipping/v1;shippingv1";
+
+// An address shared across services, defined in a separate source file.
+message PostalAddress {
+  // Street and unit lines, in display order.
+  repeated string lines = 1;
+  // City or locality.
+  string city = 2;
+  // Postal code, including letters or leading zeros.
+  string postal_code = 3;
+  // ISO country code supplied by the application.
+  string country_code = 4;
+}
+
+// A money amount, preserving integer precision in both encodings.
+message CurrencyAmount {
+  // ISO currency code, such as USD.
+  string currency = 1;
+  // Minor units. ProtoJSON emits a decimal string.
+  int64 minor_units = 2;
+}

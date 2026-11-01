@@ -1,0 +1,61 @@
+{
+  "name": "@lanej/wirelit",
+  "version": "0.1.0",
+  "description": "Generate Connect API references as ordinary MDX for Astro Starlight.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lanej/wirelit.git"
+  },
+  "bin": {
+    "wirelit": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "examples/site"
+  ],
+  "scripts": {
+    "build": "tsc && node scripts/executable.mjs",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "test": "node --import tsx --test test/*.test.ts",
+    "fixture": "buf generate && buf build --as-file-descriptor-set -o examples/schema.binpb",
+    "docs:generate": "node --import tsx src/cli.ts generate --config examples/wirelit.json",
+    "docs:build": "npm run docs:generate && npm run build --workspace examples/site",
+    "dev": "astro dev --root examples/site",
+    "check": "npm run typecheck && npm test && npm run build && npm run docs:build && node scripts/check-links.mjs",
+    "prepack": "npm run build",
+    "example:server": "node --import tsx examples/server.ts",
+    "test:go": "node --import tsx scripts/test-go.ts",
+    "test:package": "node scripts/test-package.mjs"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
+    "mdast-util-from-markdown": "^2.1.0",
+    "mdast-util-mdx": "^3.0.0",
+    "mdast-util-to-markdown": "^2.2.1"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "1.75.0",
+    "@bufbuild/protoc-gen-es": "2.16.0",
+    "@connectrpc/connect": "2.3.0",
+    "@connectrpc/connect-node": "2.3.0",
+    "@types/node": "^24.0.0",
+    "micromark-extension-mdxjs": "^3.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

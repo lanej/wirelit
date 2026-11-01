@@ -1,0 +1,5 @@
+:root { --sl-color-accent-low: #1c2949; --sl-color-accent: #8aacf8; --sl-color-accent-high: #b9ceff; }
+:root[data-theme='light'] { --sl-color-accent-low: #dfe8ff; --sl-color-accent: #345eb0; --sl-color-accent-high: #263f76; }
+.sl-markdown-content table { font-size: .875rem; }
+.sl-markdown-content :is(td, th) { vertical-align: top; }
+.sl-markdown-content td code { overflow-wrap: anywhere; }

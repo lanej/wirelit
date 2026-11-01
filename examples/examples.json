@@ -1,0 +1,25 @@
+{
+  "shipping.v1.ShipmentService.GetShipment": {
+    "request": { "shipmentId": "shp_123", "includeEvents": true },
+    "response": {
+      "shipment": {
+        "shipmentId": "shp_123",
+        "status": "SHIPMENT_STATUS_IN_TRANSIT",
+        "weightMg": "450000",
+        "createdAt": "2026-10-31T12:00:00Z",
+        "metadata": { "order": "ord_456" },
+        "streetAddress": "417 Example Street",
+        "estimatedTransit": "172800s"
+      }
+    },
+    "notes": "The local example server returns this shipment. An empty identifier returns invalid_argument.",
+    "errors": [{ "code": "invalid_argument", "message": "shipment_id is required" }]
+  },
+  "shipping.v1.ShipmentService.WatchShipment": {
+    "request": { "shipmentId": "shp_123" },
+    "responses": [
+      { "shipmentId": "shp_123", "sequence": "1", "status": "SHIPMENT_STATUS_IN_TRANSIT", "occurredAt": "2026-10-31T12:00:00Z" },
+      { "shipmentId": "shp_123", "sequence": "2", "status": "SHIPMENT_STATUS_DELIVERED", "occurredAt": "2026-10-31T12:01:00Z" }
+    ]
+  }
+}

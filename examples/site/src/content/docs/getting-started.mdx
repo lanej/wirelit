@@ -1,0 +1,69 @@
+---
+title: Add Wirelit to your docs
+description: Generate API reference files inside an existing Starlight project.
+sidebar:
+  order: 1
+---
+
+Wirelit consumes a compiled Protobuf descriptor set and writes MDX into a directory you choose. This initial version is installed from the repository; it has not been published to npm.
+
+## Build the generator
+
+```sh
+git clone https://github.com/lanej/wirelit.git
+cd wirelit
+npm ci
+npm run build
+```
+
+Use Node.js 22.12 or newer. The example Starlight site uses the versions pinned in the repository lockfile.
+
+## Compile your API contract
+
+Using Buf:
+
+```sh
+buf build --as-file-descriptor-set -o schema.binpb
+```
+
+Using protoc, include dependencies and source comments:
+
+```sh
+protoc --include_imports --include_source_info \
+  --descriptor_set_out=schema.binpb \
+  --proto_path=proto proto/shipping/v1/shipping.proto
+```
+
+## Generate ordinary MDX
+
+From the application documentation project, run the built CLI:
+
+```sh
+node /path/to/wirelit/dist/cli.js generate \
+  --schema schema.binpb \
+  --out src/content/docs/reference/api \
+  --mount /reference/api/ \
+  --base-url https://api.example.com
+```
+
+The output directory is discovered by Starlight's normal content loader. Put generation before your existing `astro build` command. The `mount` must match that directory's public URL, including any Astro base path.
+
+## Add navigation and examples
+
+Add a reference group to your existing sidebar:
+
+```js
+{ label: 'API reference', items: [{ autogenerate: { directory: 'reference/api' } }] }
+```
+
+A JSON configuration file can select services and supply example files, a source version, and client import paths. Configuration paths resolve relative to the configuration file. See `examples/wirelit.json` in the repository.
+
+Examples are keyed by fully qualified method name. They are parsed and serialized using the actual Protobuf message schemas. Invalid fields, incompatible values, and invalid oneof combinations fail generation.
+
+## Link your application guides
+
+Use normal Markdown links to method pages or field headings. Protobuf comments can link back to authored guides. Try the [shipment workflow](/guides/track-a-shipment/) to see both directions in this example site.
+
+## Regenerate safely
+
+Wirelit updates only files recorded in its ownership manifest. It refuses to overwrite authored files, edited generated files, or symbolic links. Move custom explanations into authored guides or source comments, then regenerate.
