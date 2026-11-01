@@ -22,6 +22,8 @@ export function markdown(input: string): string {
 
 export const cell = (value: string) => value.replace(/\|/g, '&#124;').replace(/\r?\n/g, ' ');
 export const literal = (value: string) => '`' + value.replace(/`/g, '&#96;') + '`';
+/** Quoted JSX attributes use HTML entities, not JavaScript string escapes. */
+export const attribute = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 export const fence = (value: string, language: string) => {
   const ticks = Math.max(3, ...Array.from(value.matchAll(/`+/g), m => m[0].length + 1));
   const delimiter = '`'.repeat(ticks);

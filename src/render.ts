@@ -1,7 +1,7 @@
 import { fromJson, toJson, type DescEnum, type DescField, type DescMessage, type DescMethod, type DescService, type JsonValue } from '@bufbuild/protobuf';
 import type { SchemaModel } from './schema.js';
 import { symbolId, symbolPath } from './schema.js';
-import { cell, fence, literal, markdown } from './markdown.js';
+import { attribute, cell, fence, literal, markdown } from './markdown.js';
 import { examplesFor } from './snippets.js';
 import type { GenerateOptions, MethodExample } from './types.js';
 import { wktJson } from './well-known.js';
@@ -55,10 +55,14 @@ export function render(model: SchemaModel, config: GenerateOptions): Rendered {
     for (const method of service.methods) {
       const example = normalizedExample(method);
       const snippets = examplesFor(method, example?.request, config);
-      const signature = `rpc ${method.name}(${method.proto.clientStreaming ? 'stream ' : ''}${method.input.typeName}) returns (${method.proto.serverStreaming ? 'stream ' : ''}${method.output.typeName});`;
+      // Linked types are part of the signature, rather than repeated below it.
+      // Semantic HTML works in MDX without a custom runtime or highlighter plugin.
+      const typeLink = (type: DescMessage) => `<a href="${attribute(href(type))}" title="${attribute(type.typeName)}">${type.name}</a>`;
+      const keyword = (word: string) => `<strong>${word}</strong>`;
+      const signature = `<pre className="wirelit-signature"><code>${keyword('rpc')} <span>${method.name}</span>(${method.proto.clientStreaming ? keyword('stream') + ' ' : ''}${typeLink(method.input)}) ${keyword('returns')} (${method.proto.serverStreaming ? keyword('stream') + ' ' : ''}${typeLink(method.output)});</code></pre>`;
       const url = `${config.baseUrl.replace(/\/$/, '')}/${service.typeName}/${method.name}`;
       const streaming = method.methodKind !== 'unary';
-      let content = `${link(service)} · **${shapeNames[method.methodKind]}**\n\n${description(method)}\n\n## RPC contract\n\n${fence(signature, 'protobuf')}\n\nRequest: ${link(method.input)} · Response: ${link(method.output)}\n\n## Connect endpoint\n\n${fence(`POST ${url}`, 'http')}\n\n${streaming ? 'Content types: `application/connect+json` or `application/connect+proto`. Messages use Connect stream envelopes. End-of-stream errors and metadata are carried in the final envelope.' : 'Content types: `application/json` or `application/proto`. The unary body is one message.'}\n\n${method.idempotency === 1 ? '**No side effects** is declared in the schema. GET availability depends on the deployed server configuration.' : method.idempotency === 2 ? '**Idempotent** is declared in the schema.' : 'The schema declares no idempotency guarantee.'}`;
+      let content = `${link(service)} · **${shapeNames[method.methodKind]}**\n\n${description(method)}\n\n## RPC contract\n\n${signature}\n\n## Connect endpoint\n\n${fence(`POST ${url}`, 'http')}\n\n${streaming ? 'Content types: `application/connect+json` or `application/connect+proto`. Messages use Connect stream envelopes. End-of-stream errors and metadata are carried in the final envelope.' : 'Content types: `application/json` or `application/proto`. The unary body is one message.'}\n\n${method.idempotency === 1 ? '**No side effects** is declared in the schema. GET availability depends on the deployed server configuration.' : method.idempotency === 2 ? '**Idempotent** is declared in the schema.' : 'The schema declares no idempotency guarantee.'}`;
       if (config.protocolGuide) content += `\n\nSee [protocol behavior](${config.protocolGuide}) for metadata, deadlines, errors, cancellation, and streaming.`;
       if (example?.notes) content += `\n\n${markdown(example.notes)}`;
       if (example?.request !== undefined) content += `\n\n## Request example\n\n${fence(JSON.stringify(example.request, null, 2), 'json')}`;
