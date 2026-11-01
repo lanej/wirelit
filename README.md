@@ -2,7 +2,7 @@
 
 Generate Connect API reference documentation as ordinary MDX files for an existing Astro Starlight site.
 
-**[Documentation and complex example](https://lanej.github.io/wirelit/)** · [Sample schema](examples/proto/shipping/v1/shipping.proto)
+**[Documentation and complex example](https://lanej.io/wirelit/)** · [Sample schema](examples/proto/shipping/v1/shipping.proto)
 
 Wirelit documents the Protobuf RPC contract and its Connect HTTP/JSON representation together. Your guides, application documentation, and generated reference share the same navigation, search, theme, and deployment.
 
@@ -135,9 +135,9 @@ The Go fixtures are checked in. With Go 1.26+ installed, run `npm run test:go` t
 
 ## Documentation deployment
 
-The Documentation workflow builds the Wirelit CLI, compiles the complex schema, runs that CLI to generate the site's reference, builds Starlight, checks links with the `/wirelit/` base, and publishes to GitHub Pages. Authored pages live under `examples/site/src/content/docs`; generated pages live in its `reference/api` subtree.
+The Documentation workflow builds the Wirelit CLI, compiles the complex schema, runs that CLI to generate the site's reference, builds Starlight, checks links with the `/wirelit/` base, and uploads the static site as a workflow artifact. Authored pages live under `examples/site/src/content/docs`; generated pages live in its `reference/api` subtree.
 
-GitHub Pages must use **GitHub Actions** as its publishing source. The workflow deploys pushes to `main` and supports manual dispatch. The Check workflow verifies code, output freshness, protocol examples, package installation, and the Pages base path on pull requests.
+The live documentation is published at **https://lanej.io/wirelit/** by the [website repository](https://github.com/lanej/lanej.github.com). Its Pages workflow builds a pinned Wirelit commit and includes the output in the same artifact as the personal website. Update the website's `.wirelit-version` pin to publish a reviewed documentation revision. This repository does not need a separate Pages deployment. The Check workflow verifies code, output freshness, protocol examples, package installation, and the Pages base path on pull requests.
 
 ## Current boundaries
 
