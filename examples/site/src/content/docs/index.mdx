@@ -1,17 +1,32 @@
 ---
-title: Wirelit
+title: Your schema. Your docs.
 description: Generated Connect API references alongside the rest of your documentation.
+tableOfContents: false
 ---
 
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import SchemaPreview from '../../components/SchemaPreview.astro';
 
-Generate a Connect API reference from Protobuf, then put it beside your guides, architecture notes, and application documentation. Wirelit writes ordinary MDX files. Your Astro and Starlight project builds and presents everything together.
+<div className="wirelit-intro">
+  <p className="eyebrow">Protobuf → MDX · Built for Starlight</p>
+  <p className="lead">Give your Connect API a home alongside the rest of your documentation. Generate linked RPC contracts, JSON examples, and typed clients as ordinary MDX.</p>
+  <div className="wirelit-actions">
+    <a href="/getting-started/">Add to your docs <span aria-hidden="true">→</span></a>
+    <a href="/reference/api/services/shipping-v1-shipmentservice/getshipment/">Explore the example</a>
+  </div>
+</div>
+
+<SchemaPreview />
+
+## Everything in one place
+
+Your guides explain the workflow. Your reference explains the contract. Readers move between them with the same navigation, search, and theme.
 
 <CardGrid>
-  <LinkCard title="Add to your docs" description="Compile a schema and generate your first MDX reference." href="/getting-started/" />
-  <LinkCard title="Follow the application guide" description="A handwritten workflow that links into the generated API." href="/guides/track-a-shipment/" />
-  <LinkCard title="Explore the generated reference" description="HTTP and JSON examples, typed RPC clients, and linked message contracts." href="/reference/api/" />
-  <LinkCard title="Understand the protocol" description="JSON and Protobuf encoding, streaming, errors, and metadata." href="/protocol/connect/" />
+  <LinkCard title="Application guides" description="Follow a shipment workflow from authored prose into the generated contract." href="/guides/track-a-shipment/" />
+  <LinkCard title="API reference" description="Explore services, methods, messages, and enums from the complex sample schema." href="/reference/api/" />
+  <LinkCard title="Connect protocol" description="Understand JSON and Protobuf encoding, streaming, errors, and metadata." href="/protocol/connect/" />
+  <LinkCard title="Complex schema" description="See how maps, oneofs, nested messages, and well-known types become documentation." href="/guides/complex-schema/" />
 </CardGrid>
 
 ## One schema, both ways to call

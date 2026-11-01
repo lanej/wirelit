@@ -1,0 +1,27 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const reference = `${base}/reference/api/`;
+const source = `service ShipmentService {
+  rpc GetShipment(GetShipmentRequest)
+    returns (GetShipmentResponse);
+}`;
+---
+<div class="wirelit-pipeline" aria-label="From Protobuf schema to linked API documentation">
+  <p class="pipeline-label">One schema → a reference that belongs in your docs</p>
+  <div class="pipeline-body">
+    <div>
+      <p class="file-label">shipping/v1/shipping.proto</p>
+      <pre><code>{source}</code></pre>
+    </div>
+    <div>
+      <p class="file-label">reference/api/</p>
+      <p class="output-title">GetShipment</p>
+      <p class="output-meta">Unary RPC · HTTP / JSON · TypeScript · Go</p>
+      <div class="output-links">
+        <a href={`${reference}services/shipping-v1-shipmentservice/getshipment/`}>Method</a>
+        <a href={`${reference}types/shipping-v1-getshipmentrequest/`}>Request</a>
+        <a href={`${reference}types/shipping-v1-getshipmentresponse/`}>Response</a>
+      </div>
+    </div>
+  </div>
+</div>

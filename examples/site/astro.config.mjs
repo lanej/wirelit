@@ -3,12 +3,14 @@ import starlight from '@astrojs/starlight';
 import { unified } from '@astrojs/markdown-remark';
 
 export default defineConfig({
+  devToolbar: { enabled: false },
   site: 'https://lanej.github.io',
   base: process.env.GITHUB_PAGES === 'true' ? '/wirelit' : '/',
   markdown: { processor: unified({ remarkPlugins: [baseLinks] }) },
   vite: { server: { allowedHosts: ['terminal.local'] } },
   integrations: [starlight({
     title: 'Wirelit',
+    logo: { src: './src/assets/wirelit.svg', replacesTitle: false },
     description: 'An ordinary documentation site, with a generated Connect API reference.',
     social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/lanej/wirelit' }],
     customCss: ['./src/styles/custom.css'],
