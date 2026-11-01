@@ -12,7 +12,7 @@ try {
   const { stdout } = await exec('npm', ['pack', '--json', '--pack-destination', dir], { cwd: root, maxBuffer: 4 * 1024 * 1024 });
   const [pack] = JSON.parse(stdout);
   await writeFile(join(dir, 'package.json'), JSON.stringify({ private: true, type: 'module' }));
-  await exec('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--offline', join(dir, pack.filename)], { cwd: dir, maxBuffer: 4 * 1024 * 1024 });
+  await exec('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--prefer-offline', join(dir, pack.filename)], { cwd: dir, maxBuffer: 4 * 1024 * 1024 });
   await mkdir(join(dir, 'docs'), { recursive: true });
   await writeFile(join(dir, 'docs/guide.mdx'), 'Authored guide');
   const args = [join(dir, 'node_modules/@lanej/wirelit/dist/cli.js'), 'generate', '--schema', join(root, 'examples/schema.binpb'), '--out', join(dir, 'docs/reference/api'), '--mount', '/reference/api/', '--base-url', 'https://api.example.com'];
