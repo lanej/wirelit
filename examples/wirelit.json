@@ -1,0 +1,18 @@
+{
+  "schema": "schema.binpb",
+  "out": "site/src/content/docs/reference/api",
+  "mount": "/reference/api/",
+  "baseUrl": "http://localhost:8080",
+  "title": "Shipping API",
+  "services": ["shipping.v1.ShipmentService"],
+  "protocolGuide": "/protocol/connect/",
+  "sourceVersion": "fixture-v1",
+  "examples": "examples.json",
+  "typescript": {
+    "module": "./gen/{file}_pb.js"
+  },
+  "go": {
+    "messageImport": "github.com/lanej/wirelit/examples/go/gen/shipping/v1",
+    "connectImport": "github.com/lanej/wirelit/examples/go/gen/shipping/v1/shippingv1connect"
+  }
+}

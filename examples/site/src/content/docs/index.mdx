@@ -1,0 +1,37 @@
+---
+title: Wirelit
+description: Generated Connect API references alongside the rest of your documentation.
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Generate a Connect API reference from Protobuf, then put it beside your guides, architecture notes, and application documentation. Wirelit writes ordinary MDX files. Your Astro and Starlight project builds and presents everything together.
+
+<CardGrid>
+  <LinkCard title="Add to your docs" description="Compile a schema and generate your first MDX reference." href="/getting-started/" />
+  <LinkCard title="Follow the application guide" description="A handwritten workflow that links into the generated API." href="/guides/track-a-shipment/" />
+  <LinkCard title="Explore the generated reference" description="HTTP and JSON examples, typed RPC clients, and linked message contracts." href="/reference/api/" />
+  <LinkCard title="Understand the protocol" description="JSON and Protobuf encoding, streaming, errors, and metadata." href="/protocol/connect/" />
+</CardGrid>
+
+## One schema, both ways to call
+
+The example Shipping API exposes the same methods to direct HTTP/JSON callers and generated RPC clients. Each method page shows its Protobuf signature, Connect endpoint, request and response contracts, and supported examples.
+
+Try [GetShipment](/reference/api/services/shipping-v1-shipmentservice/getshipment/) for a unary call, or [WatchShipment](/reference/api/services/shipping-v1-shipmentservice/watchshipment/) for server streaming.
+
+## A normal documentation project
+
+The introduction, [workflow guide](/guides/track-a-shipment/), and [protocol explanation](/protocol/connect/) are authored MDX. The pages under **API reference** are generated MDX. They use the same sidebar, search, typography, themes, and deployment.
+
+| Content | Location |
+| --- | --- |
+| Authored guides | `src/content/docs/guides/` |
+| Generated reference | `src/content/docs/reference/api/` |
+| Site configuration | Your existing `astro.config.mjs` |
+
+## Reviewable by design
+
+Generated pages contain real headings, descriptions, tables, and code blocks. You can commit them for review or generate them in CI before `astro build`. Wirelit records the files it owns and checks for edits before replacing or removing them.
+
+This site documents a local fixture API. Start the example server from the repository before running its requests.

@@ -1,0 +1,41 @@
+---
+title: Track a shipment
+description: An authored application workflow linked to the generated API contract.
+---
+
+This guide is handwritten MDX in the same Starlight project as the generated reference. It explains the workflow; the generated pages describe each method and field.
+
+## Look up the shipment
+
+Call [GetShipment](/reference/api/services/shipping-v1-shipmentservice/getshipment/) with your shipment identifier. For this local example, use `shp_123`.
+
+```json
+{
+  "shipmentId": "shp_123",
+  "includeEvents": true
+}
+```
+
+The generated [GetShipmentRequest](/reference/api/types/shipping-v1-getshipmentrequest/) lists the complete request contract. Its [include_events field](/reference/api/types/shipping-v1-getshipmentrequest/#include_events) has explicit presence, so an omitted value remains distinguishable from an explicit `false`.
+
+## Read the current state
+
+The response contains a [Shipment](/reference/api/types/shipping-v1-shipment/). Check its status before starting any application action that depends on delivery. This example is a documentation fixture, and has no authorization or payment behavior.
+
+The [weight_mg field](/reference/api/types/shipping-v1-shipment/#weight_mg) is a 64-bit integer in Protobuf and a decimal string in ProtoJSON. The [id field](/reference/api/types/shipping-v1-shipment/#id) uses the explicit JSON name `shipmentId`. Both representations come from the schema.
+
+## Subscribe to progress
+
+Use [WatchShipment](/reference/api/services/shipping-v1-shipmentservice/watchshipment/) to receive a stream of [ShipmentEvent](/reference/api/types/shipping-v1-shipmentevent/) messages. The example server emits an in-transit event followed by a delivery event and then completes.
+
+Use a generated client to handle framing, errors, and cancellation. See the [Connect protocol guide](/protocol/connect/) for the distinction between decoded JSON messages and a complete stream on the wire.
+
+## Run the example
+
+From the repository:
+
+```sh
+npm run example:server
+```
+
+Then copy a request from the generated method reference. The source comments on the service and GetShipment link back to this application guide.

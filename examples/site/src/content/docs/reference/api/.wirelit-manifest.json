@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "files": {
+    "index.mdx": "04e6963cf604b1b0e39f717458dcf0219e28316e6ec02f1e3e581ecdb08ab9cd",
+    "services/shipping-v1-shipmentservice.mdx": "ff67a5ed7e6798dde9b93dd29a24a774fb0c80974abd9ff072001b8c80c96c7e",
+    "services/shipping-v1-shipmentservice/getshipment.mdx": "f30d9906e3819f80ec23549f321ae3ba6d6fd1848d860a224394a5bd0553dd70",
+    "services/shipping-v1-shipmentservice/syncevents.mdx": "b6196cf4da0e6cf631e01d73144093b0f5b37dbd77d9e4fab6489d9757db9ca4",
+    "services/shipping-v1-shipmentservice/uploadevents.mdx": "53742945ac611d42e4e3e71f2d9a6a67052e6191a4402295a9b7bcb2634c5b4f",
+    "services/shipping-v1-shipmentservice/watchshipment.mdx": "f79dd85c2cc52396ae08482f2b329a1c3b4ee483a754c1a694a95a97349a8421",
+    "types/google-protobuf-any.mdx": "2ba77443faa1100f3651c3ee187b90157ff621fd0deb4fc1a420d51f9af081c2",
+    "types/google-protobuf-duration.mdx": "e5c4185fc09714ebacdf9da123658f3fd6e668f870b04bb00d6450f9f5888a3c",
+    "types/google-protobuf-fieldmask.mdx": "8ef6df47f1f8e1858e9a24eb6dd656b32a29aeffa37e671820fd4655dd139c42",
+    "types/google-protobuf-struct.mdx": "69f2500f359898e0c5a9cf6ac2f9bdad29260dc7265c9cbe8ce3ae861429ad53",
+    "types/google-protobuf-timestamp.mdx": "51f54401bd92a77c8ab32929b69734b8b611f946ae16b5074cf29927772f16dc",
+    "types/shipping-v1-currencyamount.mdx": "d002ea8af3fbbb49d322e3d7b29c901a986a04dddf18b242140184831c660109",
+    "types/shipping-v1-getshipmentrequest.mdx": "eaeaaeccb05de56ade41f1bc11003c06146b1529f21b63cb8286e4b9cdd83334",
+    "types/shipping-v1-getshipmentresponse.mdx": "bffc33878debaae94ccb2c027e3b1ded3526fdfd7598338555c4cb25666d923e",
+    "types/shipping-v1-postaladdress.mdx": "ede3046ba02c3a4858b667f1b61825fb6d195121fcae9f26e05d02f704eb47e8",
+    "types/shipping-v1-shipment-insurance-coverage.mdx": "78d45e775fbb06b4bf6e9bd66f39f77e2aea5c04dc82164df55fc31d2b030cfa",
+    "types/shipping-v1-shipment-insurance.mdx": "57c48a33afe96646c2c5f47591b93c1d2cbbc33e269c4d7d4d86d320a8de5dd8",
+    "types/shipping-v1-shipment.mdx": "30728bdea545066abd78be78b05f76267166fe9c94c3a23679b5623d6bf50c8a",
+    "types/shipping-v1-shipmentevent.mdx": "6e7be7dcdefc79ebda64390ebf209d532ff7d7b02656e5cde568306d8cda776b",
+    "types/shipping-v1-shipmentstatus.mdx": "607e39b2b6a231e501d7af9165c0e9b0215ea534626b06a6413c3dceda1b7208",
+    "types/shipping-v1-uploadeventsresponse.mdx": "0fa5ef4ace3ee5af9dd687e220e8810c68b6a68fa8b2d1095e8fbfc4895bd5ac",
+    "types/shipping-v1-watchshipmentrequest.mdx": "16241ed65775ef311971e9ffe7a52cd03a2f1b12b06c7085fba96772ca6cd576"
+  }
+}
