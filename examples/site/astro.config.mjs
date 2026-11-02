@@ -4,7 +4,7 @@ import { unified } from '@astrojs/markdown-remark';
 
 export default defineConfig({
   devToolbar: { enabled: false },
-  site: 'https://lanej.github.io',
+  site: 'https://lanej.io',
   base: process.env.GITHUB_PAGES === 'true' ? '/wirelit' : '/',
   markdown: { processor: unified({ remarkPlugins: [baseLinks] }) },
   vite: { server: { allowedHosts: ['terminal.local'] } },
