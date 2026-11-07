@@ -15,7 +15,7 @@ Options:
   --schema PATH       Binary FileDescriptorSet (include imports and source info)
   --out PATH          Dedicated generated MDX directory
   --mount PATH        Public URL path for the generated directory
-  --base-url URL      Connect server base URL
+  --base-url URL      Connect server base URL (optional; omit for non-public transports)
   --help              Show this help
   --version           Show the generator version
 `;
@@ -32,7 +32,7 @@ try {
     const configPath = values.config ? resolve(values.config) : undefined;
     const base = configPath ? dirname(configPath) : process.cwd();
     const config: WirelitConfig = configPath ? JSON.parse(await readFile(configPath, 'utf8')) : {};
-    const allowed = new Set(['schema', 'out', 'mount', 'baseUrl', 'title', 'services', 'protocolGuide', 'sourceVersion', 'examples', 'grpc', 'typescript', 'go']);
+    const allowed = new Set(['schema', 'out', 'mount', 'baseUrl', 'transportNote', 'title', 'services', 'protocolGuide', 'sourceVersion', 'examples', 'grpc', 'typescript', 'go']);
     for (const key of Object.keys(config)) if (!allowed.has(key)) throw new Error(`Unknown configuration option: ${key}`);
     for (const key of ['schema', 'out', 'mount'] as const) if (values[key]) config[key] = values[key]!;
     if (values['base-url']) config.baseUrl = values['base-url'];

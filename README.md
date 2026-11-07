@@ -91,6 +91,8 @@ Use normal Markdown links between guides and generated method or field anchors. 
 node dist/cli.js generate --config wirelit.json
 ```
 
+`baseUrl` is optional. Omit it for APIs that are not publicly reachable (for example a loopback or SSH-forwarded server): method pages then show path-only endpoints, curl/TypeScript/Go/grpcurl examples are not generated (configuring `typescript`, `go` or `grpc` without it is an error), and `transportNote` adds an authored Markdown note under each endpoint. Omit `sourceVersion` to leave the source line out of page footers.
+
 Paths resolve relative to the configuration file; CLI path overrides follow the same rule. `{file}` in the TypeScript module path expands to the descriptor's source path without `.proto`. For example, `shipping/v1/shipping` becomes `./gen/shipping/v1/shipping_pb.js`. Nested message schema exports are handled; imported input/output types use their defining files. TypeScript snippets target Protobuf-ES v2 and Connect v2; Go snippets target Connect-Go v1.
 
 Examples are keyed by `package.Service.Method`:

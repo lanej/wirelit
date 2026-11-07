@@ -19,7 +19,7 @@ export function render(model: SchemaModel, config: GenerateOptions): Rendered {
   const root = '/' + segments.join('/') + (segments.length ? '/' : '');
   const href = (s: DescService | DescMethod | DescMessage | DescEnum) => `${root}${symbolPath(s)}/`;
   const link = (s: DescService | DescMethod | DescMessage | DescEnum) => `[${s.name}](${href(s)})`;
-  const metadata = `Source: ${literal(config.sourceVersion ?? 'unspecified')} · Generator: ${literal('Wirelit 0.1.0')}`;
+  const metadata = `${config.sourceVersion === undefined ? '' : `Source: ${literal(config.sourceVersion)} · `}Generator: ${literal('Wirelit 0.1.0')}`;
   const warnings = [...model.warnings];
   const knownMethods = new Set(model.services.flatMap(s => s.methods.map(symbolId)));
   for (const id of Object.keys(config.examples ?? {})) if (!knownMethods.has(id)) throw new Error(`Example refers to an unselected or unknown method: ${id}`);
@@ -60,9 +60,9 @@ export function render(model: SchemaModel, config: GenerateOptions): Rendered {
       const typeLink = (type: DescMessage) => `<a href="${attribute(href(type))}" title="${attribute(type.typeName)}">${type.name}</a>`;
       const keyword = (word: string) => `<strong>${word}</strong>`;
       const signature = `<pre className="wirelit-signature"><code>${keyword('rpc')} <span>${method.name}</span>(${method.proto.clientStreaming ? keyword('stream') + ' ' : ''}${typeLink(method.input)}) ${keyword('returns')} (${method.proto.serverStreaming ? keyword('stream') + ' ' : ''}${typeLink(method.output)});</code></pre>`;
-      const url = `${config.baseUrl.replace(/\/$/, '')}/${service.typeName}/${method.name}`;
+      const url = `${config.baseUrl?.replace(/\/$/, '') ?? ''}/${service.typeName}/${method.name}`;
       const streaming = method.methodKind !== 'unary';
-      let content = `${link(service)} · **${shapeNames[method.methodKind]}**\n\n${description(method)}\n\n## RPC contract\n\n${signature}\n\n## Connect endpoint\n\n${fence(`POST ${url}`, 'http')}\n\n${streaming ? 'Content types: `application/connect+json` or `application/connect+proto`. Messages use Connect stream envelopes. End-of-stream errors and metadata are carried in the final envelope.' : 'Content types: `application/json` or `application/proto`. The unary body is one message.'}\n\n${method.idempotency === 1 ? '**No side effects** is declared in the schema. GET availability depends on the deployed server configuration.' : method.idempotency === 2 ? '**Idempotent** is declared in the schema.' : 'The schema declares no idempotency guarantee.'}`;
+      let content = `${link(service)} · **${shapeNames[method.methodKind]}**\n\n${description(method)}\n\n## RPC contract\n\n${signature}\n\n## Connect endpoint\n\n${fence(`POST ${url}`, 'http')}\n\n${streaming ? 'Content types: `application/connect+json` or `application/connect+proto`. Messages use Connect stream envelopes. End-of-stream errors and metadata are carried in the final envelope.' : 'Content types: `application/json` or `application/proto`. The unary body is one message.'}${config.transportNote ? `\n\n${markdown(config.transportNote)}` : ''}\n\n${method.idempotency === 1 ? '**No side effects** is declared in the schema. GET availability depends on the deployed server configuration.' : method.idempotency === 2 ? '**Idempotent** is declared in the schema.' : 'The schema declares no idempotency guarantee.'}`;
       if (config.protocolGuide) content += `\n\nSee [protocol behavior](${config.protocolGuide}) for metadata, deadlines, errors, cancellation, and streaming.`;
       if (example?.notes) content += `\n\n${markdown(example.notes)}`;
       if (example?.request !== undefined) content += `\n\n## Request example\n\n${fence(JSON.stringify(example.request, null, 2), 'json')}`;

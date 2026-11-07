@@ -5,7 +5,7 @@ export interface Snippet { label: string; language: string; code: string }
 const quote = (value: string) => "'" + value.replace(/'/g, "'\\''") + "'";
 
 export function examplesFor(method: DescMethod, request: JsonValue | undefined, config: GenerateOptions): Snippet[] {
-  if (request === undefined || (method.methodKind !== 'unary' && method.methodKind !== 'server_streaming')) return [];
+  if (config.baseUrl === undefined || request === undefined || (method.methodKind !== 'unary' && method.methodKind !== 'server_streaming')) return [];
   const json = JSON.stringify(request, null, 2);
   const result: Snippet[] = [];
   const url = `${config.baseUrl.replace(/\/$/, '')}/${method.parent.typeName}/${method.name}`;
