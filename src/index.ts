@@ -105,8 +105,12 @@ async function readOptional(path: string): Promise<string | undefined> {
 export function validateConfig(config: Omit<GenerateOptions, 'schema'>) {
   if (typeof config.out !== 'string' || !config.out) throw new Error('out must be a non-empty path.');
   if (typeof config.mount !== 'string' || !config.mount.startsWith('/') || /[?#\\]|\.\./.test(config.mount)) throw new Error('mount must be an absolute URL path without query, fragment, or traversal.');
-  let url: URL;
-  try { url = new URL(config.baseUrl); } catch { throw new Error('baseUrl must be an absolute HTTP or HTTPS URL.'); }
-  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash) throw new Error('baseUrl must be HTTP or HTTPS without credentials, query, or fragment.');
+  if (config.baseUrl === undefined) {
+    if (config.typescript || config.go || config.grpc) throw new Error('typescript, go, and grpc examples require a baseUrl.');
+  } else {
+    let url: URL;
+    try { url = new URL(config.baseUrl); } catch { throw new Error('baseUrl must be an absolute HTTP or HTTPS URL.'); }
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash) throw new Error('baseUrl must be HTTP or HTTPS without credentials, query, or fragment.');
+  }
   if (config.services && (!Array.isArray(config.services) || !config.services.length || config.services.some(s => typeof s !== 'string'))) throw new Error('services must be a non-empty list of qualified service names.');
 }

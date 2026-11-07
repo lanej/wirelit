@@ -15,7 +15,10 @@ export interface WirelitConfig {
   out: string;
   /** Public URL prefix for that directory, including the host's base path. */
   mount: string;
-  baseUrl: string;
+  /** Connect server base URL. Omit for non-public transports: pages then show path-only endpoints and no client snippets. */
+  baseUrl?: string;
+  /** Markdown shown under each method's Connect endpoint, such as how the host reaches the server. */
+  transportNote?: string;
   title?: string;
   services?: string[];
   protocolGuide?: string;

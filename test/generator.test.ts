@@ -151,3 +151,17 @@ test('reports missing source information and refuses unknown service names', () 
   assert.ok(readSchema(toBinary(FileDescriptorSetSchema, set)).warnings.length > 0);
   assert.throws(() => readSchema(schema, ['absent.Service']), /Service not found/);
 });
+
+test('omitting baseUrl documents path-only endpoints without client snippets', async t => {
+  const out = await temp(t);
+  const { baseUrl, typescript, ...rest } = options(out);
+  await generate({ ...rest, transportNote: 'Reached only through a **loopback** forward with bearer authentication.' });
+  const text = await readFile(join(out, method), 'utf8');
+  assert.match(text, /POST \/shipping\.v1\.ShipmentService\/GetShipment/);
+  assert.doesNotMatch(text, /curl|https:\/\/api\.example\.com|Calling this method/);
+  assert.match(text, /Reached only through a \*\*loopback\*\* forward/);
+  assert.match(text, /"weightMg": "450000"/);
+  assert.match(await readFile(join(out, 'index.mdx'), 'utf8'), /Generator: `Wirelit/);
+  assert.doesNotMatch(await readFile(join(out, 'index.mdx'), 'utf8'), /unspecified/);
+  await assert.rejects(generate({ ...rest, out, typescript: { module: './gen/{file}_pb.js' } }), /require a baseUrl/);
+});
