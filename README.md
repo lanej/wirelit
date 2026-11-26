@@ -125,7 +125,8 @@ Writes are atomic per file, not a filesystem-wide transaction. Run a single gene
 ```sh
 npm ci
 npm run fixture          # Compile the complex sample and TypeScript clients
-npm run check            # Types, tests, package build, Starlight build, links
+npm run format           # Reformat authored TypeScript at 120 columns
+npm run check            # Types, typed lint, format, tests, package and Starlight builds, links
 npm run test:package     # Install the tarball into a clean consumer
 npm run example:server  # Start the local Connect fixture on port 8080
 npm run dev             # Open the documentation project locally

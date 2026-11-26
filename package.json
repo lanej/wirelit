@@ -36,11 +36,14 @@
     "docs:generate": "node --import tsx src/cli.ts generate --config examples/wirelit.json",
     "docs:build": "npm run docs:generate && npm run build --workspace examples/site",
     "dev": "astro dev --root examples/site",
-    "check": "npm run typecheck && npm test && npm run build && npm run docs:build && node scripts/check-links.mjs",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm run docs:build && node scripts/check-links.mjs",
     "prepack": "npm run build",
     "example:server": "node --import tsx examples/server.ts",
     "test:go": "node --import tsx scripts/test-go.ts",
-    "test:package": "node scripts/test-package.mjs"
+    "test:package": "node scripts/test-package.mjs",
+    "lint": "eslint --max-warnings 0 src test scripts/test-go.ts examples/server.ts",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" scripts/test-go.ts examples/server.ts",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" scripts/test-go.ts examples/server.ts"
   },
   "dependencies": {
     "@bufbuild/protobuf": "2.16.0",
@@ -53,9 +56,13 @@
     "@bufbuild/protoc-gen-es": "2.16.0",
     "@connectrpc/connect": "2.3.0",
     "@connectrpc/connect-node": "2.3.0",
+    "@eslint/js": "9.39.5",
     "@types/node": "^24.0.0",
+    "eslint": "9.39.5",
     "micromark-extension-mdxjs": "^3.0.0",
+    "prettier": "3.6.2",
     "tsx": "^4.20.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "typescript-eslint": "8.74.0"
   }
 }

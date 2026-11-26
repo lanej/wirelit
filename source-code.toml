@@ -1,0 +1,55 @@
+schema_version = 1
+mode = "tracked"
+skill_storage = "linked"
+kind = "library"
+authority = "owned"
+adoption = "new"
+stage = "beta"
+skills = ["architecture", "builder", "code-comments", "data-change-planning", "git", "octo-manager", "pull-request", "ship", "source-code-lifecycle", "testing"]
+
+# The existing npm and CI workflows own the language checks.
+[checks.go]
+enabled = false
+
+[checks.typescript]
+enabled = false
+
+[checks.protobuf]
+enabled = false
+
+[checks.python]
+enabled = false
+
+[installed]
+version = 1
+mode = "tracked"
+skill_storage = "linked"
+go_profile = false
+authority = "owned"
+adoption = "new"
+stage = "beta"
+policy_version = "1.1.0"
+skills = ["architecture", "builder", "cli", "code-comments", "data-change-planning", "git", "go", "javascript", "library-code-comments", "octo-manager", "protobuf", "pull-request", "ship", "source-code-lifecycle", "testing", "typescript"]
+agents = "both"
+pr_template = "github"
+kind = "library"
+detect_languages = true
+protobuf_profile = false
+
+[installed.skill_versions]
+architecture = "1.2.4"
+builder = "1.1.3"
+cli = "1.0.1"
+code-comments = "1.1.2"
+data-change-planning = "1.0.0"
+git = "1.1.0"
+go = "1.1.5"
+javascript = "1.1.3"
+library-code-comments = "1.0.1"
+octo-manager = "1.0.3"
+protobuf = "1.0.3"
+pull-request = "1.0.0"
+ship = "1.0.0"
+source-code-lifecycle = "1.2.6"
+testing = "1.1.3"
+typescript = "1.1.5"

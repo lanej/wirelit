@@ -1,12 +1,12 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { mkdtemp, readFile, writeFile, mkdir, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, mkdir, rm, realpath } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
 
 const exec = promisify(execFile);
-const dir = await mkdtemp(join(tmpdir(), 'wirelit-consumer-'));
+const dir = await mkdtemp(join(await realpath(tmpdir()), 'wirelit-consumer-'));
 const root = new URL('../', import.meta.url).pathname;
 try {
   const { stdout } = await exec('npm', ['pack', '--json', '--pack-destination', dir], { cwd: root, maxBuffer: 4 * 1024 * 1024 });
@@ -16,6 +16,15 @@ try {
   await mkdir(join(dir, 'docs'), { recursive: true });
   await writeFile(join(dir, 'docs/guide.mdx'), 'Authored guide');
   const args = [join(dir, 'node_modules/@lanej/wirelit/dist/cli.js'), 'generate', '--schema', join(root, 'examples/schema.binpb'), '--out', join(dir, 'docs/reference/api'), '--mount', '/reference/api/', '--base-url', 'https://api.example.com'];
+  const configPath = join(dir, 'wirelit.json');
+  const examplePath = join(dir, 'examples.json');
+  const config = { schema: join(root, 'examples/schema.binpb'), out: 'docs/reference/api', mount: '/reference/api/', examples: 'examples.json' };
+  await writeFile(configPath, JSON.stringify({ ...config, grpc: 'false' }));
+  const configArgs = [args[0], 'generate', '--config', configPath];
+  await assert.rejects(exec(process.execPath, configArgs, { cwd: dir }), /Invalid configuration option: grpc/);
+  await writeFile(configPath, JSON.stringify(config));
+  await writeFile(examplePath, JSON.stringify({ 'shipping.v1.ShipmentService.GetShipment': { notes: 42 } }));
+  await assert.rejects(exec(process.execPath, configArgs, { cwd: dir }), /Invalid method example: shipping.v1.ShipmentService.GetShipment/);
   await exec(process.execPath, args, { cwd: dir });
   const second = await exec(process.execPath, args, { cwd: dir });
   assert.match(second.stdout, /0 written/);
