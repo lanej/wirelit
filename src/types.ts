@@ -1,4 +1,4 @@
-import type { JsonValue } from '@bufbuild/protobuf';
+import type { JsonValue } from "@bufbuild/protobuf";
 
 export interface MethodExample {
   request?: JsonValue;
@@ -29,7 +29,7 @@ export interface WirelitConfig {
   go?: { messageImport: string; connectImport: string };
 }
 
-export interface GenerateOptions extends Omit<WirelitConfig, 'schema' | 'examples'> {
+export interface GenerateOptions extends Omit<WirelitConfig, "schema" | "examples"> {
   schema: Uint8Array;
   examples?: Record<string, MethodExample>;
 }
